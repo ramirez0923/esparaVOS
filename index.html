@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EsParaVOS - Tienda Online</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header Dark Style -->
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-container">
+        <a href="#" class="brand-logo">EsParaVOS</a>
+        
+        <div class="header-actions">
+          <button id="admin-toggle-btn" class="icon-btn" title="Administrar Productos">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+          <button id="cart-toggle-btn" class="icon-btn" aria-label="Ver carrito">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cart-counter" class="cart-badge">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <ul class="nav-links">
+          <li><a href="#inicio" class="active">Inicio</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <!-- Sección de Productos -->
+    <section id="productos" class="products-section">
+      <h1 class="section-title">Productos</h1>
+      <div id="product-grid" class="product-grid">
+        <!-- Carga dinámica -->
+      </div>
+    </section>
+
+    <!-- Modal de Login para Administrador -->
+    <div id="login-modal" class="modal-overlay hidden">
+      <div class="modal-card small-modal">
+        <div class="modal-header">
+          <h3>Acceso Administrador</h3>
+          <button id="close-login-btn" class="close-btn">&times;</button>
+        </div>
+        <form id="login-form" class="admin-form">
+          <div class="form-group">
+            <label for="login-user">Usuario:</label>
+            <input type="text" id="login-user" required placeholder="Ingresá tu usuario">
+          </div>
+          <div class="form-group">
+            <label for="login-pass">Contraseña:</label>
+            <input type="password" id="login-pass" required placeholder="Ingresá tu contraseña">
+          </div>
+          <p id="login-error" class="error-msg hidden">Usuario o contraseña incorrectos</p>
+          <button type="submit" class="btn-save">Ingresar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Panel Administrador (Cargar/Editar Productos) -->
+    <div id="admin-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Gestión de Productos</h3>
+          <button id="close-admin-btn" class="close-btn">&times;</button>
+        </div>
+        
+        <form id="product-form" class="admin-form">
+          <input type="hidden" id="admin-prod-id">
+          
+          <div class="form-group">
+            <label for="admin-title">Nombre del Producto:</label>
+            <input type="text" id="admin-title" required placeholder="Ej: Polera de Algodón">
+          </div>
+
+          <div class="form-group">
+            <label for="admin-desc">Descripción del Producto:</label>
+            <textarea id="admin-desc" rows="3" placeholder="Ej: 100% algodón, talle M, excelente calidad..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="admin-price">Precio ($):</label>
+              <input type="number" id="admin-price" step="0.01" required placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label for="admin-stock">Stock Disponible:</label>
+              <input type="number" id="admin-stock" required placeholder="10">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-image-file">Subir Imagen desde el equipo/celular:</label>
+            <input type="file" id="admin-image-file" accept="image/*">
+          </div>
+          <div class="form-group">
+            <label for="admin-image-url">O pegar URL de Imagen:</label>
+            <input type="url" id="admin-image-url" placeholder="https://ejemplo.com/imagen.jpg">
+          </div>
+
+          <div id="image-preview-container" class="image-preview hidden">
+            <span>Vista previa:</span>
+            <img id="image-preview" src="" alt="Previsualización">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="save-prod-btn" class="btn-save">Guardar Producto</button>
+            <button type="button" id="cancel-prod-btn" class="btn-cancel hidden">Cancelar Edición</button>
+          </div>
+        </form>
+
+        <hr class="divider">
+
+        <h4>Productos Registrados</h4>
+        <div id="admin-prod-list" class="admin-prod-list">
+          <!-- Lista de edición -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer del Carrito y Checkout -->
+    <div id="cart-overlay" class="cart-overlay hidden"></div>
+    <aside id="cart-drawer" class="cart-drawer hidden">
+      <div class="drawer-header">
+        <h3>Tu Carrito</h3>
+        <button id="close-cart-btn" class="close-btn">&times;</button>
+      </div>
+
+      <div id="cart-items" class="cart-items">
+        <!-- Ítems agregados -->
+      </div>
+
+      <div class="cart-summary">
+        <!-- 1. Opciones de Entrega -->
+        <div class="checkout-block">
+          <h4>1. Forma de Entrega</h4>
+          <label class="radio-label">
+            <input type="radio" name="shipping-type" value="pickup" checked>
+            <span>Retiro en Local (Gratis)</span>
+          </label>
+          <small class="block-info">📍 Ubicación: Termas de Rio Hondo, Las Herras 575</small>
+
+          <label class="radio-label">
+            <input type="radio" name="shipping-type" value="delivery">
+            <span>Envío a Domicilio (Coordinar con Provedor)</span>
+          </label>
+
+        <!-- 2. Opciones de Pago -->
+        <div class="checkout-block">
+          <h4>2. Método de Pago</h4>
+          <label class="radio-label">
+            <input type="radio" name="payment-method" value="cash" checked>
+            <span>Efectivo (al retirar o recibir)</span>
+          </label>
+          
+          <label class="radio-label">
+            <input type="radio" name="payment-method" value="transfer">
+            <span>Transferencia Bancaria</span>
+          </label>
+
+          <div id="transfer-options" class="hidden field-group">
+            <div class="alias-box">
+              <p><strong>CBU/CVU:</strong> <code>0000003100087654321098</code></p>
+              <p><strong>Alias Directo:</strong> <code>ESPARAVOS.TIENDA</code></p>
+            </div>
+            <small class="block-info warning">⚠️ Recordá enviar el comprobante de pago a uno de nuestros números de WhatsApp una vez realizado el pedido.</small>
+          </div>
+        </div>
+
+        <!-- Solo Total Final -->
+        <div class="totals-block">
+          <div class="total-final">
+            <span>Total:</span>
+            <span id="total-amount">$0,00</span>
+          </div>
+        </div>
+
+        <!-- Botones WhatsApp -->
+        <div class="checkout-actions">
+          <p class="ws-label">Notificar pedido y enviar comprobante a:</p>
+          <button id="send-ws-1" class="ws-btn bg-green">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Ventas (Línea 1)
+          </button>
+          <button id="send-ws-2" class="ws-btn bg-blue">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Consultas (Línea 2)
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact-section">
+      <h2 class="section-title">Contacto</h2>
+      <div class="contact-card">
+        <p><i class="fa-solid fa-location-dot"></i> <strong>Ubicación:</strong> Termas de Rio Hondo, Las Herras 575</p>
+        <p><i class="fa-brands fa-whatsapp"></i> <strong>Atención Comercial:</strong> +54 9 3858-448460</p>
+        <p><i class="fa-brands fa-whatsapp"></i> <strong>Consultas Generales:</strong> +54 9 3858-517967</p>
+        <p><i class="fa-solid fa-clock"></i> <strong>Horarios:</strong> Lunes a Sábados de 09:00 a 20:00 hs</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EsParaVOS - Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
