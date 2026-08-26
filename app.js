@@ -5,9 +5,16 @@ const ADMIN_PASS = "lautaroagustin2015";
 const PHONE_VENTAS = "5493858448460";
 const PHONE_CONSULTAS = "5493858517967";
 
-let products = JSON.parse(localStorage.getItem("esparavos_products")) || [];
-let cart = [];
-let currentBase64Image = "";
+let products = JSON.parse(localStorage.getItem("esparavos_products")) || [
+  {
+    id: 1,
+    title: "Polera de Algodón",
+    description: "100% algodón, talle M, color negro.",
+    price: 15000,
+    stock: 5,
+    image: "https://via.placeholder.com/150"
+  }
+];
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
